@@ -1,0 +1,90 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h3>TODOs</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5>{{ accion | uppercase }} TODO</h5>
+          <form
+            autocomplete="off"
+            [formGroup]="form"
+            (ngSubmit)="guardarTodo()"
+          >
+            <div class="input-group input-group-lg mb-3">
+              <input
+                formControlName="nombre"
+                type="text"
+                class="form-control"
+                placeholder="nombre TODO"
+              />
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <label class="input-group-text">Estado</label>
+              <select formControlName="estado" class="form-select">
+                <option value="Pendiente" selected>Pendiente</option>
+                <option value="Realizado">Realizado</option>
+              </select>
+            </div>
+            <div class="input-group input-group-lg mb-3">
+              <label class="input-group-text"
+                ><i class="fa-solid fa-file-arrow-up"></i
+              ></label>
+              <input
+                formControlName="archivo"
+                type="file"
+                class="form-control"
+                accept=".pdf, .doc, .docx, .png, .jpg"
+              />
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <button
+                [disabled]="this.form.invalid"
+                type="submit"
+                class="btn btn-success btn-lg"
+              >
+                {{ accion | uppercase }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5>Listado TODOs</h5>
+          <table class="table">
+            <tbody>
+              <tr *ngFor="let todo of listTodos">
+                <td>{{ todo.id }}</td>
+                <td>{{ todo.nombre }}</td>
+                <td>{{ todo.estado }}</td>
+                <td>{{ todo.archivo }}</td>
+                <td>
+                  <i
+                    (click)="editarTodo(todo)"
+                    class="fa-solid fa-pen-to-square text-success"
+                  ></i>
+                </td>
+                <td>
+                  <i
+                    (click)="eliminarTodo(todo.id)"
+                    class="fa-solid fa-trash-can text-danger"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
