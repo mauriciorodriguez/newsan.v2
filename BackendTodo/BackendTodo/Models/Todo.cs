@@ -6,7 +6,7 @@ namespace BackendTodo.Models
     {
         public int id { get; set; }
         [Required]
-        public string nombre { get; set; }
+        public string descripcion { get; set; }
         [Required]
         public string estado { get; set; }
         public Byte[]? archivo { get; set; }

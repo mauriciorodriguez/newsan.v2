@@ -12,8 +12,6 @@ export class TodoComponent implements OnInit {
   listTodos: any[] = [];
   form: FormGroup;
   toastTiemOut: number;
-  accion = 'Crear';
-  id: number | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -22,7 +20,7 @@ export class TodoComponent implements OnInit {
   ) {
     this.toastTiemOut = 1500;
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
       estado: ['', Validators.required],
       archivo: [''],
     });
@@ -43,44 +41,62 @@ export class TodoComponent implements OnInit {
     );
   }
 
+  obtenerTodoPorId(id: String) {
+    if (id == '') return;
+    this.listTodos = [];
+    this._todoService.getTodoById(Number(id)).subscribe(
+      (data) => {
+        this.listTodos.push(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  obtenerTodoPorDesc(desc: String) {
+    if (desc == '') return;
+    this._todoService.getTodosByDesc(desc).subscribe(
+      (data) => {
+        this.listTodos = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  obtenerTodoPorEstado(estado: String) {
+    if (estado == '') return;
+    this._todoService.getTodosByState(estado).subscribe(
+      (data) => {
+        this.listTodos = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    console.log(this.listTodos);
+  }
+
   guardarTodo() {
     const todo: any = {
-      nombre: this.form.get('nombre')?.value,
+      descripcion: this.form.get('descripcion')?.value,
       estado: this.form.get('estado')?.value,
       archivo: this.form.get('archivo')?.value,
     };
-
-    if (this.id == undefined) {
-      this._todoService.createTodo(todo).subscribe(
-        (data) => {
-          this.toastr.success('El TODO fue creado', 'TODO Creado', {
-            timeOut: this.toastTiemOut,
-          });
-          this.form.reset();
-          this.obtenerTodos();
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    } else {
-      todo.id = this.id;
-      this._todoService.updateTodo(this.id, todo).subscribe(
-        (data) => {
-          this.form.reset();
-          this.accion = 'crear';
-          this.id = undefined;
-          this.toastr.info(
-            'El TODO fue actualizado con exito',
-            'TODO actualizado'
-          );
-          this.obtenerTodos();
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    }
+    this._todoService.createTodo(todo).subscribe(
+      (data) => {
+        this.toastr.success('El TODO fue creado', 'TODO Creado', {
+          timeOut: this.toastTiemOut,
+        });
+        this.form.reset();
+        this.obtenerTodos();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   eliminarTodo(id: number) {
@@ -98,12 +114,18 @@ export class TodoComponent implements OnInit {
   }
 
   editarTodo(todo: any) {
-    this.accion = 'Editar';
-    this.id = todo.id;
-    this.form.patchValue({
-      nombre: todo.nombre,
-      estado: todo.estado,
-      archivo: todo.archivo,
-    });
+    todo.estado = 'Realizado';
+    this._todoService.updateTodo(todo.id, todo).subscribe(
+      (data) => {
+        this.toastr.info(
+          'El TODO fue actualizado con exito',
+          'TODO actualizado'
+        );
+        this.obtenerTodos();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }

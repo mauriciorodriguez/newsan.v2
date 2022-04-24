@@ -31,11 +31,46 @@ namespace BackendTodo.Controllers
         }
 
         // GET api/<TodoController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var todoById = await _context.Todo.FindAsync(id);
+                return Ok(todoById);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("descripcion/{desc}")]
+        public async Task<IActionResult> Get(string desc)
+        {
+            try
+            {
+                var todosByDesc = await _context.Todo.Where(x => x.descripcion == desc).ToListAsync();
+                return Ok(todosByDesc);
+            } catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("estado/{state}")]
+        public async Task<IActionResult> GetByState(string state)
+        {
+            try
+            {
+                var todosByState = await _context.Todo.Where(x => x.estado == state).ToListAsync();
+                return Ok(todosByState);
+            }
+            catch(Exception e) 
+            { 
+                return BadRequest(e.Message); 
+            }
+        }
 
         // POST api/<TodoController>
         [HttpPost]
