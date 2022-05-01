@@ -12,17 +12,19 @@ export class TodoComponent implements OnInit {
   listTodos: any[] = [];
   form: FormGroup;
   toastTiemOut: number;
+  archivoBase64: any;
+  archivoTipo: any;
+  archivoNombre: any;
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
     private _todoService: TodoService
   ) {
-    this.toastTiemOut = 1500;
+    this.toastTiemOut = 2000;
     this.form = this.fb.group({
       descripcion: ['', Validators.required],
       estado: ['', Validators.required],
-      archivo: [''],
     });
   }
 
@@ -76,16 +78,22 @@ export class TodoComponent implements OnInit {
         console.log(error);
       }
     );
-    console.log(this.listTodos);
   }
 
   guardarTodo() {
-    const todo: any = {
-      descripcion: this.form.get('descripcion')?.value,
-      estado: this.form.get('estado')?.value,
-      archivo: this.form.get('archivo')?.value,
-    };
-    this._todoService.createTodo(todo).subscribe(
+    // const todo: any = {
+    //   descripcion: this.form.get('descripcion')?.value,
+    //   estado: this.form.get('estado')?.value,
+    //   archivo: this.archivo,
+    // };
+    const formulario = new FormData();
+    formulario.append('descripcion', this.form.get('descripcion')?.value);
+    formulario.append('estado', this.form.get('estado')?.value);
+    formulario.append('archivo', this.archivoBase64);
+    formulario.append('archivoTipo', this.archivoTipo);
+    formulario.append('archivoNombre', this.archivoNombre);
+
+    this._todoService.createTodo(formulario).subscribe(
       (data) => {
         this.toastr.success('El TODO fue creado', 'TODO Creado', {
           timeOut: this.toastTiemOut,
@@ -127,5 +135,17 @@ export class TodoComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  obtenerArchivo(e) {
+    //this.archivo = e.target.files[0];
+
+    var reader = new FileReader();
+    this.archivoNombre = e.target.files[0].name;
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onloadend = () => {
+      this.archivoBase64 = reader.result.toString().split(',')[1];
+      this.archivoTipo = reader.result.toString().split(/[:;]+/)[1];
+    };
   }
 }

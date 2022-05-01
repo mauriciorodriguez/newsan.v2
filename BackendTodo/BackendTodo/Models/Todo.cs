@@ -10,5 +10,8 @@ namespace BackendTodo.Models
         [Required]
         public string estado { get; set; }
         public Byte[]? archivo { get; set; }
+
+        public string? archivoTipo { get; set; }
+        public string? archivoNombre { get; set; }
     }
 }

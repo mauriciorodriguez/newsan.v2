@@ -74,8 +74,9 @@ namespace BackendTodo.Controllers
 
         // POST api/<TodoController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Todo todo)
+        public async Task<IActionResult> Post([FromForm] Todo todo)
         {
+            System.Diagnostics.Debug.WriteLine("ID: " + todo.id + " desc: "+todo.descripcion+" estado:"+todo.estado+" archivo:"+todo.archivo);
             try
             {
                 _context.Add(todo);

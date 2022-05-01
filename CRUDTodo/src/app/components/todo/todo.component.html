@@ -38,7 +38,7 @@
                 ><i class="fa-solid fa-file-arrow-up"></i
               ></label>
               <input
-                formControlName="archivo"
+                (change)="obtenerArchivo($event)"
                 type="file"
                 class="form-control"
                 accept=".pdf, .doc, .docx, .png, .jpg"
@@ -113,9 +113,13 @@
                     class="fa-solid fa-arrows-rotate"
                   ></i>
                 </td>
-                <td>{{ todo.archivo }}</td>
+                <td>
+                  <a href="#">{{ todo.archivoNombre }}</a>
+                  <!--TODO: implementar descarga-->
+                </td>
                 <td>
                   <i
+                    *ngIf="todo"
                     (click)="eliminarTodo(todo.id)"
                     class="fa-solid fa-trash-can text-danger"
                   ></i>
