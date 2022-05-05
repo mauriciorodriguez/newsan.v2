@@ -12,7 +12,7 @@ entityframeworkcore.tools 6.0.2
 swashbuckle.aspnetcore 6.2.3
 ```
 
-Persisentica en SQL server
+Persistencia en SQL server
 
 ## Frontend realizado en Angular en [Visual Studio Code](https://code.visualstudio.com/)
 
